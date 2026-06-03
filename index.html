@@ -18,7 +18,6 @@
 
     body {
       font-family: 'Montserrat', sans-serif;
-      /* Fondo rosa suave tipo macarón */
       background: linear-gradient(135deg, #f7c5d0 0%, #f9a8bc 40%, #f4b8c8 70%, #fbd0dc 100%);
       display: flex;
       justify-content: center;
@@ -38,7 +37,68 @@
       z-index: 0;
     }
 
-    /* ── TARJETA (sobre el canvas) ── */
+    /* ── WRAPPER de tarjeta (para posicionar stickers fuera) ── */
+    .card-wrapper {
+      position: relative;
+      max-width: 490px;
+      width: 100%;
+      z-index: 1;
+    }
+
+    /* ── STICKERS ── */
+    .sticker {
+      position: absolute;
+      width: 90px;
+      height: 90px;
+      border-radius: 12px;
+      object-fit: cover;
+      border: 4px solid #fff;
+      box-shadow: 0 6px 18px rgba(180,60,90,0.25), 0 2px 6px rgba(0,0,0,0.10);
+      z-index: 3;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+    }
+    .sticker:hover {
+      transform: scale(1.12) rotate(0deg) !important;
+      box-shadow: 0 12px 28px rgba(180,60,90,0.35);
+      z-index: 10;
+    }
+
+    /* Posiciones y rotaciones individuales */
+    .sticker-1 {
+      top: -18px; left: -22px;
+      transform: rotate(-8deg);
+    }
+    .sticker-2 {
+      top: -22px; right: -18px;
+      transform: rotate(7deg);
+    }
+    .sticker-3 {
+      top: 50%; left: -28px;
+      transform: translateY(-50%) rotate(-5deg);
+    }
+    .sticker-4 {
+      top: 50%; right: -28px;
+      transform: translateY(-50%) rotate(6deg);
+    }
+    .sticker-5 {
+      bottom: -18px; left: 50%;
+      transform: translateX(-50%) rotate(-3deg);
+    }
+
+    /* Cintita de papel adhesivo encima de cada sticker */
+    .sticker::before {
+      content: '';
+      position: absolute;
+      top: -8px; left: 50%;
+      transform: translateX(-50%) rotate(-2deg);
+      width: 32px; height: 14px;
+      background: rgba(253,200,210,0.70);
+      border-radius: 3px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.10);
+    }
+
+    /* ── TARJETA ── */
     .invitation-card {
       max-width: 430px;
       width: 100%;
@@ -46,7 +106,6 @@
       padding: 36px 30px 40px;
       box-shadow: 0 30px 70px rgba(180,60,90,0.22), 0 8px 24px rgba(0,0,0,0.08);
       position: relative;
-      z-index: 1;
       overflow: hidden;
       background-color: var(--romantic-bg);
       color: var(--romantic-text);
@@ -55,6 +114,7 @@
         radial-gradient(circle at 10% 10%,  rgba(255,182,193,0.28) 0%, transparent 50%),
         radial-gradient(circle at 90% 80%,  rgba(253,220,220,0.30) 0%, transparent 60%),
         radial-gradient(circle at 50% 40%,  rgba(255,240,243,0.50) 0%, transparent 70%);
+      margin: 0 auto;
     }
 
     /* flores de esquina */
@@ -74,6 +134,31 @@
       border: 1px solid rgba(217,107,126,0.14);
       border-radius: 16px;
       padding: 28px 18px;
+    }
+
+    /* ── BOTÓN DE MÚSICA ── */
+    #music-btn {
+      position: fixed;
+      bottom: 20px; right: 20px;
+      width: 46px; height: 46px;
+      border-radius: 50%;
+      background: var(--romantic-primary);
+      border: none;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 14px rgba(217,107,126,0.4);
+      z-index: 100;
+      font-size: 1.3rem;
+      transition: transform 0.2s, box-shadow 0.2s;
+      animation: pulse-btn 2.5s ease-in-out infinite;
+    }
+    #music-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 8px 20px rgba(217,107,126,0.5);
+    }
+    @keyframes pulse-btn {
+      0%,100% { box-shadow: 0 4px 14px rgba(217,107,126,0.4); }
+      50%      { box-shadow: 0 4px 22px rgba(217,107,126,0.65); }
     }
 
     /* ── MOÑO ── */
@@ -258,101 +343,153 @@
   <!-- Canvas para fresas cayendo -->
   <canvas id="strawberry-canvas"></canvas>
 
-  <div class="invitation-card">
-    <div class="inner-frame">
+  <!-- Audio de fondo -->
+  <audio id="bg-music" src="st.mp3" loop preload="auto"></audio>
 
-      <!-- ══ MOÑO ══ -->
-      <div class="bow-wrapper">
-        <svg width="148" height="84" viewBox="0 0 160 90" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M75 45C30 10 10 30 15 55C20 75 55 65 75 45Z" fill="#f2a0b5" stroke="#c9607a" stroke-width="2.5"/>
-          <circle cx="35" cy="45" r="2.5" fill="#fff" opacity="0.65"/>
-          <circle cx="55" cy="55" r="2.5" fill="#fff" opacity="0.65"/>
-          <path d="M85 45C130 10 150 30 145 55C140 75 105 65 85 45Z" fill="#f2a0b5" stroke="#c9607a" stroke-width="2.5"/>
-          <circle cx="125" cy="45" r="2.5" fill="#fff" opacity="0.65"/>
-          <circle cx="105" cy="55" r="2.5" fill="#fff" opacity="0.65"/>
-          <path d="M70 50C60 70 45 85 40 85" stroke="#c9607a" stroke-width="2.5" stroke-linecap="round"/>
-          <path d="M90 50C100 70 115 85 120 85" stroke="#c9607a" stroke-width="2.5" stroke-linecap="round"/>
-          <circle cx="80" cy="45" r="13" fill="#d96b7e" stroke="#c9607a" stroke-width="1.8"/>
-          <path d="M73 38C76 34 84 34 87 38C84 39 76 39 73 38Z" fill="#a8d8a8"/>
-          <circle cx="76" cy="44" r="1" fill="#fff" opacity="0.8"/>
-          <circle cx="84" cy="44" r="1" fill="#fff" opacity="0.8"/>
-          <circle cx="80" cy="50" r="1" fill="#fff" opacity="0.8"/>
-        </svg>
-      </div>
+  <!-- Botón flotante de música -->
+  <button id="music-btn" title="Música">🎵</button>
 
-      <p class="guest-text">Nuestra dulce niña</p>
-      <h1 class="name-calligraphy">Najhla</h1>
+  <!-- WRAPPER con stickers + tarjeta -->
+  <div class="card-wrapper">
 
-      <!-- ══ NÚMERO 1 FRESA ══ -->
-      <div class="strawberry-row">
-        <div class="strawberry-line"></div>
-        <div class="strawberry-1">
-          <svg width="50" height="70" viewBox="0 0 110 150" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M40 35H62V135C62 142 55 145 45 145C35 145 32 140 32 132V55L20 62C15 65 10 60 12 52L28 38C32 35 36 35 40 35Z"
-                  fill="#d96b7e" stroke="#c9607a" stroke-width="4" stroke-linejoin="round"/>
-            <path d="M18 42C25 35 35 38 42 22C48 38 58 35 65 40C60 48 50 45 42 48C34 45 24 48 18 42Z"
-                  fill="#a8d8a8" stroke="#7cb87c" stroke-width="1.8" stroke-linejoin="round"/>
-            <path d="M42 22C42 15 45 10 50 8" stroke="#7cb87c" stroke-width="2.5" stroke-linecap="round"/>
-            <circle cx="48"  cy="65"  r="2.2" fill="#fce4ec" opacity="0.9"/>
-            <circle cx="36"  cy="80"  r="2.2" fill="#fce4ec" opacity="0.9"/>
-            <circle cx="52"  cy="95"  r="2.2" fill="#fce4ec" opacity="0.9"/>
-            <circle cx="45"  cy="115" r="2.2" fill="#fce4ec" opacity="0.9"/>
-            <circle cx="55"  cy="130" r="2.2" fill="#fce4ec" opacity="0.9"/>
-            <circle cx="28"  cy="58"  r="1.8" fill="#fce4ec" opacity="0.9"/>
+    <!-- ══ STICKERS (fotos) ══ -->
+    <img src="foto1.png" class="sticker sticker-1" alt="foto 1" draggable="false">
+    <img src="foto2.png" class="sticker sticker-2" alt="foto 2" draggable="false">
+    <img src="foto3.png" class="sticker sticker-3" alt="foto 3" draggable="false">
+    <img src="foto4.png" class="sticker sticker-4" alt="foto 4" draggable="false">
+    <img src="foto5.png" class="sticker sticker-5" alt="foto 5" draggable="false">
+
+    <!-- ══ TARJETA ══ -->
+    <div class="invitation-card">
+      <div class="inner-frame">
+
+        <!-- MOÑO -->
+        <div class="bow-wrapper">
+          <svg width="148" height="84" viewBox="0 0 160 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M75 45C30 10 10 30 15 55C20 75 55 65 75 45Z" fill="#f2a0b5" stroke="#c9607a" stroke-width="2.5"/>
+            <circle cx="35" cy="45" r="2.5" fill="#fff" opacity="0.65"/>
+            <circle cx="55" cy="55" r="2.5" fill="#fff" opacity="0.65"/>
+            <path d="M85 45C130 10 150 30 145 55C140 75 105 65 85 45Z" fill="#f2a0b5" stroke="#c9607a" stroke-width="2.5"/>
+            <circle cx="125" cy="45" r="2.5" fill="#fff" opacity="0.65"/>
+            <circle cx="105" cy="55" r="2.5" fill="#fff" opacity="0.65"/>
+            <path d="M70 50C60 70 45 85 40 85" stroke="#c9607a" stroke-width="2.5" stroke-linecap="round"/>
+            <path d="M90 50C100 70 115 85 120 85" stroke="#c9607a" stroke-width="2.5" stroke-linecap="round"/>
+            <circle cx="80" cy="45" r="13" fill="#d96b7e" stroke="#c9607a" stroke-width="1.8"/>
+            <path d="M73 38C76 34 84 34 87 38C84 39 76 39 73 38Z" fill="#a8d8a8"/>
+            <circle cx="76" cy="44" r="1" fill="#fff" opacity="0.8"/>
+            <circle cx="84" cy="44" r="1" fill="#fff" opacity="0.8"/>
+            <circle cx="80" cy="50" r="1" fill="#fff" opacity="0.8"/>
           </svg>
         </div>
-        <div class="strawberry-line"></div>
-      </div>
 
-      <div class="celebration-badge">Primer añito &amp; Bautizo</div>
+        <p class="guest-text">Nuestra dulce niña</p>
+        <h1 class="name-calligraphy">Najhla</h1>
 
-      <p class="message-body">
-        Hay momentos en la vida que son irrepetibles,<br>
-        pero compartirlos con las personas<br>
-        que más queremos los hace inolvidables.
-      </p>
-
-      <div class="romantic-date-display">
-        <div class="date-side">Julio</div>
-        <div class="date-center">04</div>
-        <div class="date-side">Sábado</div>
-      </div>
-
-      <div class="romantic-details-list">
-        <div class="romantic-item">
-          <h5>Ceremonia Religiosa</h5>
-          <p>1:00 pm</p>
+        <!-- NÚMERO 1 FRESA -->
+        <div class="strawberry-row">
+          <div class="strawberry-line"></div>
+          <div class="strawberry-1">
+            <svg width="50" height="70" viewBox="0 0 110 150" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M40 35H62V135C62 142 55 145 45 145C35 145 32 140 32 132V55L20 62C15 65 10 60 12 52L28 38C32 35 36 35 40 35Z"
+                    fill="#d96b7e" stroke="#c9607a" stroke-width="4" stroke-linejoin="round"/>
+              <path d="M18 42C25 35 35 38 42 22C48 38 58 35 65 40C60 48 50 45 42 48C34 45 24 48 18 42Z"
+                    fill="#a8d8a8" stroke="#7cb87c" stroke-width="1.8" stroke-linejoin="round"/>
+              <path d="M42 22C42 15 45 10 50 8" stroke="#7cb87c" stroke-width="2.5" stroke-linecap="round"/>
+              <circle cx="48"  cy="65"  r="2.2" fill="#fce4ec" opacity="0.9"/>
+              <circle cx="36"  cy="80"  r="2.2" fill="#fce4ec" opacity="0.9"/>
+              <circle cx="52"  cy="95"  r="2.2" fill="#fce4ec" opacity="0.9"/>
+              <circle cx="45"  cy="115" r="2.2" fill="#fce4ec" opacity="0.9"/>
+              <circle cx="55"  cy="130" r="2.2" fill="#fce4ec" opacity="0.9"/>
+              <circle cx="28"  cy="58"  r="1.8" fill="#fce4ec" opacity="0.9"/>
+            </svg>
+          </div>
+          <div class="strawberry-line"></div>
         </div>
-        <div class="romantic-item">
-          <h5>Celebración en Salón</h5>
-          <p>3:00 pm</p>
+
+        <div class="celebration-badge">Primer añito &amp; Bautizo</div>
+
+        <p class="message-body">
+          Hay momentos en la vida que son irrepetibles,<br>
+          pero compartirlos con las personas<br>
+          que más queremos los hace inolvidables.
+        </p>
+
+        <div class="romantic-date-display">
+          <div class="date-side">Julio</div>
+          <div class="date-center">04</div>
+          <div class="date-side">Sábado</div>
         </div>
-      </div>
 
-      <div class="actions-area">
-        <a href="https://maps.app.goo.gl/ZqhzhHibTRur6VDu7?g_st=ic" target="_blank" class="web-btn btn-primary">
-          ⛪ Ver Ubicación de la Iglesia
-        </a>
-        <a href="https://maps.app.goo.gl/a28ea4H9oArsE5V9A" target="_blank" class="web-btn btn-primary">
-          🎉 Ver Ubicación de la Fiesta
-        </a>
-        <a href="https://wa.me/5215627616286?text=Hola!+Confirmo+mi+asistencia+al+festejo+de+Najhla" target="_blank" class="web-btn btn-secondary">
-          💌 Confirmar Presencia
-        </a>
-      </div>
+        <div class="romantic-details-list">
+          <div class="romantic-item">
+            <h5>Ceremonia Religiosa</h5>
+            <p>1:00 pm</p>
+          </div>
+          <div class="romantic-item">
+            <h5>Celebración en Salón</h5>
+            <p>3:00 pm</p>
+          </div>
+        </div>
 
-    </div>
-  </div>
+        <div class="actions-area">
+          <a href="https://maps.app.goo.gl/ZqhzhHibTRur6VDu7?g_st=ic" target="_blank" class="web-btn btn-primary">
+            ⛪ Ver Ubicación de la Iglesia
+          </a>
+          <a href="https://maps.app.goo.gl/a28ea4H9oArsE5V9A" target="_blank" class="web-btn btn-primary">
+            🎉 Ver Ubicación de la Fiesta
+          </a>
+          <a href="https://wa.me/5215627616286?text=Hola!+Confirmo+mi+asistencia+al+festejo+de+Najhla" target="_blank" class="web-btn btn-secondary">
+            💌 Confirmar Presencia
+          </a>
+        </div>
+
+      </div>
+    </div><!-- /invitation-card -->
+
+  </div><!-- /card-wrapper -->
 
   <script>
+    // ═══════════════════════════════════
+    //  AUDIO – activa al primer toque
+    // ═══════════════════════════════════
+    const music   = document.getElementById('bg-music');
+    const musicBtn = document.getElementById('music-btn');
+    let playing = false;
+
+    function startMusic() {
+      if (!playing) {
+        music.volume = 0.55;
+        music.play().then(() => {
+          playing = true;
+          musicBtn.textContent = '🎵';
+        }).catch(() => {});
+      }
+    }
+
+    // Primer toque/click en cualquier parte arranca la música
+    document.addEventListener('click',     startMusic, { once: true });
+    document.addEventListener('touchstart', startMusic, { once: true });
+
+    // Botón flotante: pausa / reanuda
+    musicBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (music.paused) {
+        music.play();
+        playing = true;
+        musicBtn.textContent = '🎵';
+      } else {
+        music.pause();
+        playing = false;
+        musicBtn.textContent = '🔇';
+      }
+    });
+
     // ═══════════════════════════════════════════════════════
     //  FRESAS CAYENDO  –  dibujadas con Canvas 2D
-    //  Cada fresa es un mini SVG path convertido en imagen
     // ═══════════════════════════════════════════════════════
     const canvas = document.getElementById('strawberry-canvas');
     const ctx    = canvas.getContext('2d');
 
-    // Ajustar canvas al tamaño de ventana
     function resize() {
       canvas.width  = window.innerWidth;
       canvas.height = window.innerHeight;
@@ -360,18 +497,14 @@
     resize();
     window.addEventListener('resize', resize);
 
-    // ── Crear una imagen de fresa REDONDA usando SVG inline ──
     function makeStrawberryImage(size, alpha) {
       const s = size;
-      // Fresa redonda clásica: viewBox 100x110
       const svgStr = `
         <svg xmlns="http://www.w3.org/2000/svg"
              width="${s}" height="${Math.round(s*110/100)}"
              viewBox="0 0 100 110">
-          <!-- Cuerpo de la fresa (forma corazón invertido) -->
           <path d="M50 100 C20 80 5 60 5 42 C5 25 18 15 32 18 C38 20 44 24 50 30 C56 24 62 20 68 18 C82 15 95 25 95 42 C95 60 80 80 50 100Z"
                 fill="rgba(217,107,126,${alpha})" stroke="rgba(185,75,95,${alpha*0.7})" stroke-width="1.5"/>
-          <!-- Semillas / puntitos -->
           <circle cx="35" cy="45" r="2.5" fill="rgba(252,228,236,${alpha})"/>
           <circle cx="50" cy="38" r="2.5" fill="rgba(252,228,236,${alpha})"/>
           <circle cx="65" cy="45" r="2.5" fill="rgba(252,228,236,${alpha})"/>
@@ -382,12 +515,9 @@
           <circle cx="38" cy="76" r="2"   fill="rgba(252,228,236,${alpha})"/>
           <circle cx="53" cy="76" r="2"   fill="rgba(252,228,236,${alpha})"/>
           <circle cx="65" cy="77" r="1.8" fill="rgba(252,228,236,${alpha})"/>
-          <!-- Hojas verdes -->
           <path d="M32 18 C28 5 42 2 50 12 C58 2 72 5 68 18 C62 14 56 12 50 14 C44 12 38 14 32 18Z"
                 fill="rgba(120,190,120,${alpha})" stroke="rgba(80,155,80,${alpha*0.7})" stroke-width="1"/>
-          <!-- Tallito -->
           <line x1="50" y1="12" x2="50" y2="2" stroke="rgba(80,155,80,${alpha})" stroke-width="2.5" stroke-linecap="round"/>
-          <!-- Brillo sutil -->
           <ellipse cx="38" cy="38" rx="7" ry="5" fill="rgba(255,255,255,${alpha*0.35})" transform="rotate(-20,38,38)"/>
         </svg>`;
       const blob = new Blob([svgStr], {type:'image/svg+xml'});
@@ -397,7 +527,6 @@
       return img;
     }
 
-    // Pre-generar variantes de fresa (tamaños y opacidades)
     const VARIANTS = [];
     const sizes   = [16, 22, 28, 34, 42, 20, 26, 36];
     const alphas  = [0.22, 0.30, 0.38, 0.45, 0.32, 0.20, 0.35, 0.28];
@@ -405,7 +534,6 @@
       VARIANTS.push(makeStrawberryImage(sizes[i], alphas[i]));
     }
 
-    // ── Partículas ────────────────────────────────────────
     const TOTAL = 70;
     const particles = [];
 
@@ -416,27 +544,25 @@
         x:      Math.random() * window.innerWidth,
         y:      fromTop ? -s * 2 - Math.random() * window.innerHeight
                         : -s - Math.random() * window.innerHeight,
-        vy:     0.6 + Math.random() * 1.1,          // velocidad caída
-        vx:     (Math.random() - 0.5) * 0.5,        // deriva lateral leve
+        vy:     0.6 + Math.random() * 1.1,
+        vx:     (Math.random() - 0.5) * 0.5,
         rot:    Math.random() * Math.PI * 2,
-        rotV:   (Math.random() - 0.5) * 0.018,      // rotación
+        rotV:   (Math.random() - 0.5) * 0.018,
         img:    VARIANTS[vi],
         w:      s,
         h:      Math.round(s * 150 / 110),
-        swing:  Math.random() * Math.PI * 2,         // fase del balanceo
-        swingS: 0.008 + Math.random() * 0.012,       // velocidad balanceo
-        swingA: 0.4 + Math.random() * 0.9,           // amplitud balanceo px
+        swing:  Math.random() * Math.PI * 2,
+        swingS: 0.008 + Math.random() * 0.012,
+        swingA: 0.4 + Math.random() * 0.9,
       };
     }
 
-    // Llenar pantalla desde el inicio (distribuidas en Y)
     for (let i = 0; i < TOTAL; i++) {
       const p = randomParticle(false);
-      p.y = -p.h + Math.random() * (window.innerHeight + p.h); // distribuir
+      p.y = -p.h + Math.random() * (window.innerHeight + p.h);
       particles.push(p);
     }
 
-    // ── Loop de animación ────────────────────────────────
     function animate() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -446,17 +572,14 @@
         p.x     += p.vx + Math.sin(p.swing) * p.swingA;
         p.rot   += p.rotV;
 
-        // Rebotar lateralmente
         if (p.x > canvas.width  + p.w) p.x = -p.w;
         if (p.x < -p.w * 2)            p.x = canvas.width + p.w;
 
-        // Reiniciar al salir por abajo
         if (p.y > canvas.height + p.h + 10) {
           const fresh = randomParticle(true);
           Object.assign(p, fresh);
         }
 
-        // Dibujar con rotación
         ctx.save();
         ctx.translate(p.x + p.w / 2, p.y + p.h / 2);
         ctx.rotate(p.rot);
@@ -469,11 +592,9 @@
       requestAnimationFrame(animate);
     }
 
-    // Esperar a que carguen las imágenes antes de arrancar
     let loaded = 0;
     VARIANTS.forEach(img => {
       img.onload = () => { loaded++; if (loaded === VARIANTS.length) animate(); };
-      // Fallback si ya cargó
       if (img.complete) { loaded++; if (loaded === VARIANTS.length) animate(); }
     });
   </script>
